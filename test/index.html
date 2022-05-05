@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <style></style>
+  <!-- Required meta tags -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
+
+  <title>Zuni</title>
+</head>
+
+<body class="bg-dark">
+  <script>
+    import "./styles.css";
+
+    document.getElementById("app").innerHTML = `
+
+<table class="page">
+  <tr>
+    <td style="width:50%;" rowspan="4">
+      <img src="3.png" style="width:200px;"/>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <button id="connect_button">Connect</button>
+    </td>
+  </tr>
+  <tr style="height:60%;">
+    <td style="width:25%;">
+      CURRENT BLOCK
+      <h5 id="current_block">110000</h5>
+      PRICE
+      <h5>100 KLAY</h5>
+    </td>
+
+    <td style="width:25%;">
+      EVENT BLOCK
+      <h5 id="current_block">110000</h5>
+      PER TX
+      <h5>1</h5>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <button id="mint_button">MINT</button>
+    </td>
+  </tr>
+</table>
+<!--연동하기 button_kaikas에 해당-->
+
+
+
+`;
+    //chrome브라우저에 내 카이카스가 있는지 확인
+    console.log(typeof window.klaytn !== "undefined");
+    //버튼 찾았다.
+    const connectbutton = document.querySelector("#connect_button");
+    //버튼을 눌렸을 때 다음과 같은 반응을 한다
+    function onClickConnectButton { async () => {
+      //window.klaytn.enable();
+      const accounts = await window.klaytn.enable(); //카이카스 지갑 작동
+      const account = accounts[0]; //월렛 주소중 제일 첫번째거가져오기
+
+      console.log(account);
+      document.querySelector("#connect_button").innerHTML = account;
+    };
+  }
+
+    connectbutton.addEventListener("click", onClickConnectButton);
+
+    function onClickMintButton() {
+      async () => {
+        const accounts = await window.klaytn.enable();
+        const account = accounts[0];
+
+        if (window.klaytn.networkVersion !== 8217) {
+          //8217 mainnet
+          //1001 testnet
+          alert("적절한 네트워크가 아닙니다.");
+          return;
+        }
+
+        const SMART_CONTRACT_MAINNET = "0x62B132909db663330c60ec25274f5f778cC21fE0";
+        const SMART_CONTRACT_TESTNET = "0xFc365f10dd0c296A0cfE91c03314d32Ce4aD4b9c";
+        const transactionParameters = {
+          to: SMART_CONTRACT_MAINNET,
+          from: account,
+          data:
+            "0xa0712d680000000000000000000000000000000000000000000000000000000000000001",
+          value: "0x56BC75E2D63100000", //100KLAY 작은 사이즈 타투
+          gas: "0x3476A"
+        };
+
+        // 하고 싶은 일 블록체인에 요청하기
+        // 블록체인에 가서 실제 물어보기
+        window.klaytn.sendAsync(
+          {
+            method: "klay_sendTransaction",
+            params: [transactionParameters],
+            from: account
+          },
+          (receipt, result) => {
+            console.log(receipt);
+            console.log(result); //결과값은 이곳에 넣어주세요.
+          }
+        );
+      };
+    }
+
+    const mintbutton = document.querySelector("#mint_button");
+    mintbutton.addEventListener("click", onClickMintButton);
+  </script>
+  <!-- <img src="./assets/zuniLogo.png" class="img-fluid" alt="Responsive image" /> -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="d-flex justify-content-between align-items-md-center collapse navbar-collapse bg-dark"
+      id="navbarSupportedContent" style="align-items: center; justify-content: space-evenly; height: 100px;">
+      <div class="d-flex justify-content-between">
+        <ul class="navbar-nav mr-auto d-flex justify-content-between">
+          <img src="./assets/zuniLogo.png" width="250" height="110" class="img-responsive" />
+
+        </ul>
+      </div>
+      <div class="d-flex justify-content-center align-items-md-center">
+
+        <li class="nav-item active">
+          <a class="nav-link" href="#story" style="color: white; font-size: 26px;">STORY <span
+              class="sr-only"></span></a>
+        </li>
+
+
+
+        <li class="nav-item">
+          <a class="nav-link" style="color: white; font-size: 26px;" href="#ZUNINFT">ZUNINFT</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#roadmap" style="color: white; font-size: 26px;">ROADMAP <span
+              class="sr-only"></span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="https://opensea.io/collection/zuni-v2"
+            style="color: white; font-size: 26px;">MINTING <span class="sr-only"></span></a>
+        </li>
+        <li class="nav-item dropdown"></li>
+        <li class="nav-item">
+          <a class="nav-link disabled" href="#"></a>
+        </li>
+      </div>
+    </div>
+  </nav>
+  <!-- <div class="d-flex justify-content-center align-items-md-center">
+    <img src="./assets/black.png" width="1000" height="600" class="img-responsive" />
+  </div> -->
+  <!-- <div class="d-flex justify-content-center align-items-md-center">
+    <img src="./assets/zuniBig.png" width="385" height="240" class="img-responsive" />
+  </div> -->
+  <!-- <div style="position: relative;" class="d-flex justify-content-center align-items-md-center">
+    <div style="width: 100%">
+      <img src="./assets/tree.png" style="width: 100%" />
+    </div>
+    <div class="d-flex align-items-md-center">
+
+      <div style="width: 800px; right: 900px; bottom: 120px; position: absolute; ">
+        <img src="./assets/smile.png" width="912" height="546" class="img-responsive" />
+      </div>
+      <div
+        style=" right: 300px; top: 80px; position: absolute; font-size: 48px; width: 500px; bottom: 730px; color:beige"
+        class="d-flex align-items-md-center">
+        <text name="story" id="story">
+          STORY
+        </text>
+
+      </div>
+      <div style="
+          width: 950px;
+          bottom: 130px;
+          font-size: 22px;
+          right: 10px;
+          color: beige;
+          position: absolute;
+          " class="d-flex align-items-md-center">
+        <text style="font-size: 22px;
+        right: 10px;
+        color: beige;">
+          <br /><br />천년 전부터 성인이 되면
+          부족의 상징으로 몸에 다양한
+          문양을 그리는 <br /><br />문화를 가진 에버리진 원주민들. <br /><br />
+          어느새 주민공 주니(Zuni)도 몸에 문양을 새길 나이가 되었습니다. <br /><br />
+          부족 안에서 그려지는 식상한 문양이 싫었던 주니. <br /><br />
+          "나는 내 몸에 세상을 담을거야!" <br /><br />
+          세계를 여행하며 각국의 타투이스트를 만나 <br /><br />그들만의 문양을 몸에
+          새깁니다.
+        </text>
+      </div>
+    </div>
+  </div> -->
+  <div class="d-flex justify-content-center align-items-md-center" style="height: 150px">
+  </div>
+
+  <div class="d-flex justify-content-around">
+    <!-- <img src="./assets/tatto1.png" width="350" height="350" class="img-responsive" />
+    <img src="./assets/tatto2.png" width="350" height="350" class="img-responsive" /> -->
+    <img src="./assets/tatto3.png" width="350" height="350" class="img-responsive" />
+    <div style="flex-direction: row;">
+      <button onclick="onClickConnectButton()" type="button" class="btn btn-danger">Connect</button>
+
+      <p style="color: white; font-size: 26px" id="roadmap">current block : 89626798</p>
+      <p style="color: white; font-size: 26px" id="roadmap">event block : 89703015</p>
+      <p style="color: white; font-size: 26px" id="roadmap">price : 100 klay</p>
+      <p style="color: white; font-size: 26px" id="roadmap">pertx :1</p>
+      <div onClick="onClickMintButton()">
+
+        <img src="./assets/mint.png" width="550" height="350" class="img-responsive" />
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Button trigger modal -->
+
+
+  <!-- Modal -->
+
+
+
+  <!-- Optional JavaScript; choose one of the two! -->
+
+  <!-- Option 1: Bootstrap Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+
+  <!-- Option 2: Separate Popper and Bootstrap JS -->
+  <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+    -->
+</body>
+
+
+</html>
